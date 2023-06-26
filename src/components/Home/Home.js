@@ -1,11 +1,16 @@
 import React, { useState }from 'react';
 import './Home.css';
-import ChatBox from '../ChatBox/ChatBox';
+import Modal from 'react-bootstrap/Modal';
+import { BsSend } from 'react-icons/bs';
 
 const Home = ({ chatList }) => {
-  const [showMessage, setShowMessage] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [show, setShow] = useState(false);
 
+  const handleClose = (e) => setShow(false);
+  const handleShow = (e) => setShow(true);
+
+  const messageLength = chatList.messageList.length;
+  const deafultMessage = "Hello"
   const stamp = chatList.latestMessageTimestamp;
   const date = new Date(stamp);
   const formattedDate = date.toLocaleDateString('en-GB', {
@@ -16,21 +21,14 @@ const Home = ({ chatList }) => {
  
  const messageArray = []
  chatList.messageList.map((list)=>{
-     messageArray.push(list.message)
-     return messageArray
+    messageArray.push(list.message)
+    return messageArray
   });
 
-  const handleOpen = () =>{
-    setShowMessage(true);
- }
-
- const handleClose = () =>{
-      setShowMessage(false);
- }
 
   return (
     <React.Fragment>
-        <div className="chat-left" onClick={handleOpen}>
+        <div className="chat-list"  onClick={handleShow}>
             <div className="chat-detail">
               <img src={chatList.imageURL} alt={chatList.title} />
               <div>
@@ -41,7 +39,27 @@ const Home = ({ chatList }) => {
             </div>
             <p>{formattedDate}</p>
         </div>
-        {showMessage && <ChatBox chatList = {chatList} handleClose={handleClose} />}
+        <Modal show={show} onHide={handleClose}>
+           <Modal.Header closeButton>
+             <img src={chatList.imageURL} alt={chatList.title} />
+              <span>{chatList.title}</span>
+           </Modal.Header>
+           <Modal.Body>
+             {chatList.messageList.map((list)=>{
+              return(
+                <React.Fragment>
+                  <p className={list.sender === "USER" ? "blue" : "white"} key={list.messageId}>
+                    {messageLength === 0 ? deafultMessage : list.message }
+                  </p>
+                </React.Fragment>
+              )
+             })}
+           </Modal.Body>
+           <Modal.Footer>
+              <input type="text" id="message" placeholder='Type a Message...' />
+              <BsSend />
+           </Modal.Footer>
+        </Modal>
     </React.Fragment>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import Home from '../components/Home/Home';
+import Home from '../Home/Home';
 import './Server.css'
 
 const Server = () => {

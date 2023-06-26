@@ -1,5 +1,5 @@
 import './App.css';
-import Server from './server/Server';
+import Server from './components/Server/Server'
 
 function App() {
   return (
